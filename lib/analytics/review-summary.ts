@@ -1,38 +1,50 @@
 import { getMonthlyTrends } from "./trends";
 import { getDistrictRankings } from "./rankings";
+import { Filters } from "@/types/filters";
 
-export async function generateReviewSummary() {
+export async function generateReviewSummary(filters: Filters = {}) {
   const trends =
-    await getMonthlyTrends();
+    await getMonthlyTrends(filters);
 
   const districts =
-    await getDistrictRankings();
+    await getDistrictRankings(filters);
 
-  const july = trends[0];
-  const september = trends[2];
+  if (trends.length === 0) {
+    return {
+      achievements: ["Insufficient data for trends"],
+      risks: [],
+      priorityAreas: [],
+      discussionPoints: ["No data available for discussion"],
+    };
+  }
+
+  const firstMonth = trends[0];
+  const lastMonth = trends[trends.length - 1];
 
   return {
     achievements: [
-      `Attendance moved from ${july.attendanceRate.toFixed(
+      `Attendance moved from ${firstMonth.attendanceRate.toFixed(
         1
-      )}% to ${september.attendanceRate.toFixed(
+      )}% (Initial) to ${lastMonth.attendanceRate.toFixed(
         1
-      )}%`,
-      `Evidence submission reached ${september.evidenceRate.toFixed(
+      )}% (Current)`,
+      `Evidence submission reached ${lastMonth.evidenceRate.toFixed(
         1
-      )}%`,
+      )}% in ${lastMonth.month}`,
     ],
 
     risks: districts
-      .slice(-3)
+      .filter(d => d.risk === "Critical" || d.risk === "At Risk")
+      .slice(0, 3)
       .map(
         (d) =>
-          `${d.district} classified as ${d.risk}`
+          `${d.name} classified as ${d.risk} (${d.performance}% attendance)`
       ),
 
     priorityAreas: districts
-      .slice(-3)
-      .map((d) => d.district),
+      .filter(d => d.risk === "Critical" || d.risk === "At Risk")
+      .slice(0, 3)
+      .map((d) => d.name),
 
     discussionPoints: [
       "Which districts require additional program support?",
@@ -40,4 +52,4 @@ export async function generateReviewSummary() {
       "What explains attendance variation between districts?",
     ],
   };
-}
+}

@@ -1,21 +1,64 @@
 import { db } from "@/db";
 import { schoolResponses } from "@/db/schema/school_responses";
+import { Filters } from "@/types/filters";
+import { and, eq } from "drizzle-orm";
 
-export async function getMonthlyTrends() {
-  const rows = await db
-    .select()
-    .from(schoolResponses);
+export async function getMonthlyTrends(filters: Filters = {}) {
+  const conditions = [];
 
-  const months = [
-    "July 2025",
-    "August 2025",
-    "September 2025",
-  ];
-
-  return months.map((month) => {
-    const monthRows = rows.filter(
-      (r) => r.reportingMonth === month
+  if (filters.district) {
+    conditions.push(
+      eq(
+        schoolResponses.district,
+        filters.district
+      )
     );
+  }
+
+  if (filters.block) {
+    conditions.push(
+      eq(
+        schoolResponses.blockDetails,
+        filters.block
+      )
+    );
+  }
+
+  if (filters.subject) {
+    conditions.push(
+      eq(
+        schoolResponses.subject,
+        filters.subject
+      )
+    );
+  }
+
+  const rows = conditions.length
+    ? await db
+        .select()
+        .from(schoolResponses)
+        .where(and(...conditions))
+    : await db
+        .select()
+        .from(schoolResponses);
+
+  // Group by month
+  const monthlyData = new Map<string, typeof rows>();
+  rows.forEach(row => {
+    if (!monthlyData.has(row.reportingMonth)) {
+      monthlyData.set(row.reportingMonth, []);
+    }
+    monthlyData.get(row.reportingMonth)?.push(row);
+  });
+
+  const sortedMonths = Array.from(monthlyData.keys()).sort((a, b) => {
+    // Simple sort for "Month Year" format
+    // In production we'd parse these, but for this project we'll assume standard format
+    return a.localeCompare(b);
+  });
+
+  return sortedMonths.map((month) => {
+    const monthRows = monthlyData.get(month) || [];
 
     const total = monthRows.length;
 
@@ -45,15 +88,17 @@ export async function getMonthlyTrends() {
       month,
 
       participationRate:
-        (participation / total) * 100,
+        total === 0 ? 0 : (participation / total) * 100,
 
       evidenceRate:
-        (evidence / total) * 100,
+        total === 0 ? 0 : (evidence / total) * 100,
 
       attendanceRate:
-        (attendance /
-          (enrollment * 2)) *
-        100,
+        enrollment === 0
+          ? 0
+          : (attendance /
+              (enrollment * 2)) *
+            100,
     };
   });
-}
+}

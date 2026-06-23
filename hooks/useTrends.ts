@@ -2,20 +2,22 @@
 
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import { Filters } from "@/types/filters";
+import { buildQueryString } from "@/lib/query";
 
-export type TrendItem = {
+export type TrendData = {
   month: string;
   participationRate: number;
   evidenceRate: number;
   attendanceRate: number;
 };
 
-export function useTrends() {
-  const { data, error, isLoading, mutate } =
-    useSWR<TrendItem[]>(
-      "/api/trends",
-      fetcher
-    );
+export function useTrends(filters: Filters = {}) {
+  const queryString = buildQueryString(filters);
+  const { data, error, isLoading, mutate } = useSWR<TrendData[]>(
+    `/api/trends${queryString}`,
+    fetcher
+  );
 
   return {
     trends: data ?? [],

@@ -2,6 +2,8 @@
 
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import { Filters } from "@/types/filters";
+import { buildQueryString } from "@/lib/query";
 
 export type DashboardResponse = {
   totalSchools: number;
@@ -13,10 +15,11 @@ export type DashboardResponse = {
   attendanceRate: number;
 };
 
-export function useDashboard() {
+export function useDashboard(filters: Filters = {}) {
+  const queryString = buildQueryString(filters);
   const { data, error, isLoading, mutate } =
     useSWR<DashboardResponse>(
-      "/api/dashboard",
+      `/api/dashboard${queryString}`,
       fetcher
     );
 
@@ -26,4 +29,4 @@ export function useDashboard() {
     error,
     refresh: mutate,
   };
-}
+}

@@ -2,13 +2,9 @@
 
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
-
-export type RankingRow = {
-  rank: number;
-  name: string;
-  performance: number;
-  risk: "On Track" | "Behind" | "At Risk" | "Critical";
-};
+import { RankingRow } from "@/types/dashboard";
+import { Filters } from "@/types/filters";
+import { buildQueryString } from "@/lib/query";
 
 export type RankingsResponse = {
   topDistricts: RankingRow[];
@@ -17,17 +13,20 @@ export type RankingsResponse = {
   bottomBlocks: RankingRow[];
 };
 
-export function useRankings() {
-  const { data, error, isLoading, mutate } =
-    useSWR<RankingsResponse>(
-      "/api/rankings",
-      fetcher
-    );
+export function useRankings(filters: Filters = {}) {
+  const queryString = buildQueryString(filters);
+  const {
+    data,
+    error,
+    isLoading,
+  } = useSWR<RankingsResponse>(
+    `/api/rankings${queryString}`,
+    fetcher
+  );
 
   return {
     rankings: data,
     isLoading,
     error,
-    refresh: mutate,
   };
 }

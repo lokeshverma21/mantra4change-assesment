@@ -2,6 +2,8 @@
 
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import { Filters } from "@/types/filters";
+import { buildQueryString } from "@/lib/query";
 
 export type ReviewSummaryResponse = {
   achievements: string[];
@@ -10,10 +12,11 @@ export type ReviewSummaryResponse = {
   discussionPoints: string[];
 };
 
-export function useReviewSummary() {
+export function useReviewSummary(filters: Filters = {}) {
+  const queryString = buildQueryString(filters);
   const { data, error, isLoading, mutate } =
     useSWR<ReviewSummaryResponse>(
-      "/api/review-summary",
+      `/api/review-summary${queryString}`,
       fetcher
     );
 

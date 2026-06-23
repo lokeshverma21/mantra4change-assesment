@@ -24,8 +24,9 @@ export function useGrantReport(
     grantId && reportingMonth;
 
   const url = shouldFetch
-    ? `/api/grant-report?grantId=${grantId}&reportingMonth=${reportingMonth}`
+    ? `/api/grant-report?grantId=${grantId}&month=${reportingMonth}`
     : null;
+
 
   const { data, error, isLoading, mutate } =
     useSWR<GrantReport>(

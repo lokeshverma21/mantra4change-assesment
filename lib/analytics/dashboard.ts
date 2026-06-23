@@ -2,11 +2,7 @@ import { db } from "@/db";
 import { schoolResponses } from "@/db/schema/school_responses";
 import { and, eq } from "drizzle-orm";
 
-type Filters = {
-  month?: string;
-  district?: string;
-  block?: string;
-};
+import { Filters } from "@/types/filters";
 
 export async function getDashboardMetrics(
   filters: Filters = {}
@@ -30,6 +26,25 @@ export async function getDashboardMetrics(
       )
     );
   }
+
+  if (filters.block) {
+    conditions.push(
+      eq(
+        schoolResponses.blockDetails,
+        filters.block
+      )
+    );
+  }
+
+  if (filters.subject) {
+    conditions.push(
+      eq(
+        schoolResponses.subject,
+        filters.subject
+      )
+    );
+  }
+
 
   const rows =
     conditions.length > 0
