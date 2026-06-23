@@ -16,7 +16,19 @@ Clone the repository and install the dependencies:
 npm install
 ```
 
-### 3. Database Setup
+### 3. Environment Variables
+Create a `.env` file in the root directory and add the following:
+```env
+NEXT_PUBLIC_NAME="Your Name"
+NEXT_PUBLIC_EMAIL="your.email@example.com"
+NEXT_PUBLIC_WEBSITE_URL="https://yourwebsite.com"
+
+# Optional: Turso Configuration (for production deployment)
+TURSO_DATABASE_URL=...
+TURSO_AUTH_TOKEN=...
+```
+
+### 4. Database Setup
 The project uses SQLite with Drizzle ORM. You need to generate the local database file and apply the schema:
 ```bash
 # Generate the SQL migrations
@@ -26,7 +38,34 @@ npm run db:generate
 npm run db:migrate
 ```
 
-### 4. Data Import
+### 5. Database Configuration
+Ensure your configuration files match the following for local development:
+
+#### `drizzle.config.ts`
+```typescript
+import { defineConfig } from "drizzle-kit";
+
+export default defineConfig({
+  schema: "./db/schema.ts",
+  out: "./drizzle",
+  dialect: "sqlite",
+  dbCredentials: {
+    url: "./database/pbl.db",
+  },
+});
+```
+
+#### `db/index.ts`
+```typescript
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+
+const sqlite = new Database("./database/pbl.db");
+
+export const db = drizzle(sqlite);
+```
+
+### 6. Data Import
 The dashboard relies on school-level responses, grant finance data, and performance metrics stored in CSV files. Import them into your database:
 
 ```bash
@@ -43,7 +82,7 @@ npm run import:performance
 npm run import:evidence
 ```
 
-### 5. Running the Development Server
+### 7. Running the Development Server
 Once the data is imported, start the development server:
 ```bash
 npm run dev
