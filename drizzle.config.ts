@@ -5,6 +5,7 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "sqlite",
   dbCredentials: {
-    url: "./database/pbl.db",
+    url: process.env.TURSO_DATABASE_URL!,
+    token: process.env.TURSO_AUTH_TOKEN!,
   },
 });

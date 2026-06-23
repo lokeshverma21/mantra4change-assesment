@@ -16,6 +16,7 @@
     "import:evidence": "tsx scripts/import-evidence-assets.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.4",
     "better-sqlite3": "^12.11.1",
     "clsx": "^2.1.1",
     "csv-parser": "^3.2.1",
