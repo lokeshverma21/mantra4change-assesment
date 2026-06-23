@@ -9,6 +9,10 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
         <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="text-center">
+            <div className="text-indigo-600 text-sm mb-6">
+              <Link href={`${process.env.NEXT_PUBLIC_WEBSITE_URL}`}>{process.env.NEXT_PUBLIC_NAME}</Link> <br />
+              <Link href={`mailto:${process.env.NEXT_PUBLIC_EMAIL}`}>{process.env.NEXT_PUBLIC_EMAIL}</Link>
+            </div>
             <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
               Educational Program <span className="text-indigo-600">Monitoring</span>
             </h1>

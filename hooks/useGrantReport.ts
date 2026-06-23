@@ -2,34 +2,21 @@
 
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
-
-export type GrantReport = {
-  grantId: string;
-  donor: string;
-  grantName: string;
-  reportingMonth: string;
-  reportStatus: string;
-  riskStatus: string;
-  pblCompletionRate: number;
-  evidenceSubmissionRate: number;
-  attendanceRate: number;
-  draftReportText: string;
-};
+import { GrantReportData } from "@/types/grant";
 
 export function useGrantReport(
   grantId?: string,
   reportingMonth?: string
 ) {
   const shouldFetch =
-    grantId && reportingMonth;
+    grantId && reportingMonth && grantId !== "" && reportingMonth !== "";
 
   const url = shouldFetch
     ? `/api/grant-report?grantId=${grantId}&month=${reportingMonth}`
     : null;
 
-
   const { data, error, isLoading, mutate } =
-    useSWR<GrantReport>(
+    useSWR<GrantReportData>(
       url,
       fetcher
     );
@@ -40,4 +27,4 @@ export function useGrantReport(
     error,
     refresh: mutate,
   };
-}
+}

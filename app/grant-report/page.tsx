@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import GrantPageLayout from "@/components/grant/GrantPageLayout";
-import SectionHeader from "@/components/dashboard/SectionHeader";
 import { useGrantReport } from "@/hooks/useGrantReport";
 import { useGrants } from "@/hooks/useGrants";
 import { useFilters } from "@/hooks/useFilters";
 import GrantReportSkeleton from "@/components/grant/GrantReportSkeleton";
 
 export default function GrantReportPage() {
-  const { grants, isLoading: grantsLoading } = useGrants();
+  const { grants } = useGrants();
   const { filters } = useFilters();
 
   const [selectedGrantId, setSelectedGrantId] = useState("");
@@ -19,27 +18,6 @@ export default function GrantReportPage() {
     selectedGrantId,
     selectedMonth
   );
-
-  const grantSummary = useMemo(() => {
-    if (!report) return null;
-    return {
-      grantName: report.grantName,
-      donor: report.donor,
-      reportingMonth: report.reportingMonth,
-      reportStatus: report.reportStatus,
-      riskStatus: report.riskStatus as any,
-    };
-  }, [report]);
-
-  const grantMetrics = useMemo(() => {
-    if (!report) return null;
-    return {
-      pblCompletionRate: report.pblCompletionRate,
-      evidenceSubmissionRate: report.evidenceSubmissionRate,
-      attendanceRate: report.attendanceRate,
-      sampledSchoolRecords: 0, // Not available in basic report hook
-    };
-  }, [report]);
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -82,14 +60,15 @@ export default function GrantReportPage() {
 
         {reportLoading ? (
           <GrantReportSkeleton />
-        ) : report && grantSummary && grantMetrics ? (
+        ) : report ? (
           <GrantPageLayout
             title="Grant Performance Report"
             subtitle="Detailed analysis of program impact and budget utilization."
-            summary={grantSummary}
-            metrics={grantMetrics}
-            milestoneSummary="Summary of milestones achieved during this period."
-            reportText={report.draftReportText}
+            summary={report.grantInfo}
+            metrics={report.performance}
+            milestoneSummary={report.performance.milestoneSummary ?? "No summary available."}
+            reportText={report.reportText}
+            evidence={report.evidence}
           />
         ) : (
           <div className="rounded-2xl border-2 border-dashed border-slate-200 p-12 text-center">

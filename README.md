@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Educational Program Monitoring Dashboard
 
-## Getting Started
+A premium, data-driven analytics dashboard for monitoring educational program impact, attendance trends, and grant performance. Built with Next.js 15, TypeScript, Drizzle ORM, and Tailwind CSS.
 
-First, run the development server:
+## 🚀 Quick Start
 
+Follow these steps to get the project running locally on your machine.
+
+### 1. Prerequisites
+- **Node.js**: v18 or higher
+- **npm**: v9 or higher
+
+### 2. Installation
+Clone the repository and install the dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Database Setup
+The project uses SQLite with Drizzle ORM. You need to generate the local database file and apply the schema:
+```bash
+# Generate the SQL migrations
+npm run db:generate
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Apply migrations to the local SQLite database
+npm run db:migrate
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Data Import
+The dashboard relies on school-level responses, grant finance data, and performance metrics stored in CSV files. Import them into your database:
 
-## Learn More
+```bash
+# Import school-level responses (Attendance, Participation)
+npm run import:schools
 
-To learn more about Next.js, take a look at the following resources:
+# Import Grant Finance data
+npm run import:finance
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Import Grant Performance metrics
+npm run import:performance
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Import Evidence Assets (Image paths and captions)
+npm run import:evidence
+```
 
-## Deploy on Vercel
+### 5. Running the Development Server
+Once the data is imported, start the development server:
+```bash
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🛠 Features
+
+- **Dynamic Interactive Dashboard**: High-level KPIs and trends with reactive filtering for months, districts, blocks, and subjects.
+- **Grant Performance Reports**: Automated, data-rich reports for donors including budget utilization and impact narratives.
+- **Advanced Analytics**: Deep-dive visualizations for attendance, participation, and evidence submission trends.
+- **Comparative Rankings**: Leaderboards for identifying top-performing districts and blocks requiring intervention.
+- **Evidence Gallery**: Visual verification of program activities with automated asset path resolution.
+
+## 🏗 Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: SQLite with Drizzle ORM
+- **State Management**: SWR (Stale-While-Revalidate) for data fetching
+- **Charts**: Recharts
+
+## 📁 Project Structure
+
+- `/app`: Next.js pages and API routes.
+- `/components`: Reusable UI components (KPI cards, charts, tables).
+- `/db`: Database schema definitions and connection setup.
+- `/hooks`: Custom React hooks for data fetching and state management.
+- `/lib/analytics`: Business logic for metric calculations and data aggregation.
+- `/scripts`: Utility scripts for importing data from CSV files.
+- `/types`: Shared TypeScript interfaces and types.
+
+## 📧 Contact
+
+**Author**: Lokesh Verma  
+**Website**: [lokeshverma.in](https://lokeshverma.in)  
+**Email**: [lokeshverma.tech@gmail.com](mailto:lokeshverma.tech@gmail.com)

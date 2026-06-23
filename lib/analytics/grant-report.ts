@@ -9,17 +9,25 @@ type GrantReportParams = {
   reportingMonth: string;
 };
 
+const MONTH_MAP: Record<string, string> = {
+  "July 2025": "2025-07",
+  "August 2025": "2025-08",
+  "September 2025": "2025-09",
+};
+
 export async function generateGrantReport({
   grantId,
   reportingMonth,
 }: GrantReportParams) {
+  const dbMonth = MONTH_MAP[reportingMonth] || reportingMonth;
+
   const financeRows = await db
     .select()
     .from(grantFinance)
     .where(
       and(
         eq(grantFinance.grantId, grantId),
-        eq(grantFinance.reportingMonth, reportingMonth)
+        eq(grantFinance.reportingMonth, dbMonth)
       )
     );
 
@@ -29,7 +37,7 @@ export async function generateGrantReport({
     .where(
       and(
         eq(grantPerformance.grantId, grantId),
-        eq(grantPerformance.reportingMonth, reportingMonth)
+        eq(grantPerformance.reportingMonth, dbMonth)
       )
     );
 
@@ -39,9 +47,10 @@ export async function generateGrantReport({
     .where(
       and(
         eq(evidenceAssets.grantId, grantId),
-        eq(evidenceAssets.reportingMonth, reportingMonth)
+        eq(evidenceAssets.reportingMonth, dbMonth)
       )
     );
+
 
   if (!performanceRows.length) {
     return null;
