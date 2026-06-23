@@ -1,0 +1,81 @@
+CREATE TABLE `school_responses` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`reporting_month` text NOT NULL,
+	`timestamp` text,
+	`school_name` text NOT NULL,
+	`school_code` text NOT NULL,
+	`district` text NOT NULL,
+	`block_details` text,
+	`project_conducted` text,
+	`evidence_submitted` text,
+	`conducted_classes` text,
+	`subject` text,
+	`class6_enrollment` integer,
+	`class6_science_attendance` integer,
+	`class6_math_attendance` integer,
+	`class7_enrollment` integer,
+	`class7_science_attendance` integer,
+	`class7_math_attendance` integer,
+	`class8_enrollment` integer,
+	`class8_science_attendance` integer,
+	`class8_math_attendance` integer,
+	`derived_total_enrollment` integer,
+	`derived_total_attendance` integer,
+	`derived_attendance_rate` real,
+	`derived_risk_status` text
+);
+--> statement-breakpoint
+CREATE TABLE `grant_finance` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`grant_id` text NOT NULL,
+	`donor` text NOT NULL,
+	`grant_name` text NOT NULL,
+	`period_start` text,
+	`period_end` text,
+	`covered_districts` text,
+	`reporting_month` text,
+	`budget_line` text,
+	`approved_budget_units` real,
+	`monthly_utilized_units` real,
+	`cumulative_utilized_units` real,
+	`cumulative_utilization_rate` real,
+	`finance_note` text
+);
+--> statement-breakpoint
+CREATE TABLE `grant_performance` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`grant_id` text NOT NULL,
+	`donor` text NOT NULL,
+	`grant_name` text NOT NULL,
+	`reporting_month` text,
+	`period_end_date` text,
+	`report_due_date` text,
+	`report_status` text,
+	`covered_districts` text,
+	`sampled_school_records` integer,
+	`schools_completed_pbl` integer,
+	`pbl_completion_rate` real,
+	`schools_with_evidence` integer,
+	`evidence_submission_rate` real,
+	`total_enrollment` integer,
+	`total_attendance` integer,
+	`attendance_rate` real,
+	`risk_status` text,
+	`milestone_summary` text,
+	`draft_report_text` text
+);
+--> statement-breakpoint
+CREATE TABLE `evidence_assets` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`record_id` text NOT NULL,
+	`record_type` text,
+	`grant_id` text,
+	`donor` text,
+	`reporting_month` text,
+	`district` text,
+	`title` text,
+	`summary_or_caption` text,
+	`file_name` text,
+	`relative_path` text,
+	`usage_note` text
+);
